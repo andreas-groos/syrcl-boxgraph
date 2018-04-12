@@ -1,6 +1,6 @@
 import Vue from "vue";
 import Vuex from "vuex";
-import { find, findIndex, remove } from "lodash";
+import { find, findIndex } from "lodash";
 import shortid from "shortid";
 
 Vue.use(Vuex);

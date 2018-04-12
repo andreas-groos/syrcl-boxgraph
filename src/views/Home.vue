@@ -1,16 +1,25 @@
 <template>
   <div class="home">
-    <BoxPlot :stations="loadedStations" />
+    <div class="plot-style">
+      <h4 @click="switchPlot('BoxPlot')"
+          :class="{active: currentPlot === 'BoxPlot'}">stations</h4>
+      <h4 @click="switchPlot(
+          'BoxPlot2')"
+          :class="{active:
+          currentPlot === 'BoxPlot2'}">months</h4>
+    </div>
     <v-select :options="selectionOptions"
               placeholder="select a monitoring station"
               resetOnOptionsChange
               @input="fetchStationData" />
+    <component :is="currentPlot"></component>
     <Error :errors="errors"></Error>
   </div>
 </template>
 
 <script>
 import BoxPlot from "../components/BoxPlot.vue";
+import BoxPlot2 from "../components/BoxPlot2.vue";
 import Error from "../components/Error.vue";
 import vSelect from "vue-select";
 
@@ -20,11 +29,12 @@ import find from "lodash/find";
 
 export default {
   name: "home",
-  components: { vSelect, BoxPlot, Error },
+  components: { vSelect, BoxPlot, BoxPlot2, Error },
   data() {
     return {
       stations: [],
-      loading: 0
+      loading: 0,
+      currentPlot: "BoxPlot2"
     };
   },
 
@@ -40,8 +50,11 @@ export default {
     }
   },
   methods: {
+    switchPlot: function(style) {
+      this.currentPlot = style;
+      console.log("this.currentPlot", this.currentPlot);
+    },
     fetchStationData: function(station) {
-      console.log("station", station);
       const id = station.value.StationID;
       if (!this.loadedStations[id]) {
         this.$apollo
@@ -80,11 +93,17 @@ export default {
 };
 </script>
 
-<style scoped>
-ul {
-  list-style-type: none;
+<style lang="scss"  scoped>
+.plot-style {
+  display: flex;
+  justify-content: center;
+  & > h4 {
+    padding: 10px 30px;
+    margin: 5px 10px;
+  }
 }
-li {
-  text-align: left;
+.active {
+  color: #42b983;
+  text-decoration: underline;
 }
 </style>

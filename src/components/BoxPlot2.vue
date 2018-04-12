@@ -7,11 +7,11 @@
 
 <script>
 import graphConfig from "../assets/graphConfig.js";
-import { boxPlotDataPerStation } from "../utils";
+import { boxPlotDataPerMonth, get5 } from "../utils";
 import { mapState } from "vuex";
 
 export default {
-  name: "BoxPlot",
+  name: "BoxPlot2",
   data() {
     return {};
   },
@@ -21,24 +21,41 @@ export default {
       return {
         ...graphConfig,
         title: {
-          text: "per station"
+          text: "per month"
         },
         series: [
           {
             name: "Measurments",
-            data: this.plotData.map(p => p.data),
+            data: this.plotData.map(p => {
+              return get5(p);
+            }),
             tooltip: {
               headerFormat: "<em>Station: {point.key}</em><br/>"
             }
           }
         ],
         xAxis: {
-          categories: this.plotData.map(p => p.station.StationName)
+          categories: [
+            "Jan",
+            "Feb",
+            "Mar",
+            "Apr",
+            "May",
+            "Jun",
+            "Jul",
+            "Aug",
+            "Sep",
+            "Oct",
+            "Nov",
+            "Dec"
+          ]
         }
       };
     },
     plotData: function() {
-      return boxPlotDataPerStation(this.loadedStations);
+      return boxPlotDataPerMonth(
+        this.loadedStations[this.loadedStations.length - 1]
+      );
     }
   }
 };
