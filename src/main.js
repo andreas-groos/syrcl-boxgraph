@@ -5,12 +5,19 @@ import store from "./store";
 import "./registerServiceWorker";
 import VueApollo from "vue-apollo";
 import apolloClient from "./apollo";
+import HighchartsVue from "highcharts-vue"; // NOTE: Can't get official port working on vue-cli 3
+import Highcharts from "highcharts";
+import highchartsMore from "highcharts-more";
+import VueHighcharts from "vue-highcharts"; // NOTE: unofficial client, would be good to switch
 
+highchartsMore(Highcharts);
 Vue.config.productionTip = false;
 
 const apolloProvider = new VueApollo({
   defaultClient: apolloClient
 });
+
+Vue.use(VueHighcharts, { Highcharts });
 
 new Vue({
   router,

@@ -1,20 +1,31 @@
 import Vue from "vue";
 import Vuex from "vuex";
+import { find, findIndex, remove } from "lodash";
+import shortid from "shortid";
 
 Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
-    loadedStations: {}
+    loadedStations: [],
+    errors: []
   },
   mutations: {
     addStationData(state, payload) {
-      const { id, data } = payload;
-      state.loadedStations = { ...state.loadedStations, [id]: data }; // NOTE: imutable !
+      const { station, data } = payload;
+      state.loadedStations.push({ station, data });
+    },
+    addError(state, payload) {
+      const { type, msg } = payload;
+      state.errors.push({ type, msg, id: shortid.generate() });
+    },
+    removeError(state, payload) {
+      let index = findIndex(state.errors, e => payload.id === e.id);
+      state.errors.splice(index, 1);
     }
   },
   getters: {
-    loadedStations: state => state.loadedStations
+    quartiles: state => state.loadedStations
   },
   actions: {}
 });

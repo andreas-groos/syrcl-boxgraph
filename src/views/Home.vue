@@ -1,38 +1,48 @@
 <template>
   <div class="home">
+    <BoxPlot :stations="loadedStations" />
     <v-select :options="selectionOptions"
               placeholder="select a monitoring station"
               resetOnOptionsChange
               @input="fetchStationData" />
-
+    <Error :errors="errors"></Error>
   </div>
 </template>
 
 <script>
-import { GET_STATIONS, GET_STATION_DATA } from "../apollo/queries";
+import BoxPlot from "../components/BoxPlot.vue";
+import Error from "../components/Error.vue";
 import vSelect from "vue-select";
-import { mapGetters } from "vuex";
+
+import { GET_STATIONS, GET_STATION_DATA } from "../apollo/queries";
+import { mapState } from "vuex";
+import find from "lodash/find";
 
 export default {
   name: "home",
-  components: {},
+  components: { vSelect, BoxPlot, Error },
   data() {
     return {
       stations: [],
       loading: 0
     };
   },
+
   computed: {
-    ...mapGetters(["loadedStations"]),
+    ...mapState(["loadedStations", "errors"]),
     selectionOptions: function() {
       return this.stations.map(s => {
-        return { label: s.StationName, value: s.StationID };
+        return {
+          label: s.StationName,
+          value: s
+        };
       });
     }
   },
   methods: {
     fetchStationData: function(station) {
-      const id = station.value;
+      console.log("station", station);
+      const id = station.value.StationID;
       if (!this.loadedStations[id]) {
         this.$apollo
           .query({
@@ -42,20 +52,31 @@ export default {
             }
           })
           .then(res => {
-            this.$store.commit("addStationData", {
-              id,
-              data: res.data.sitevisits
-            });
+            if (
+              find(
+                this.loadedStations,
+                o => station.value.StationID === o.station.StationID
+              )
+            ) {
+              this.$store.commit("addError", {
+                type: "selection",
+                msg: "station already selected"
+              });
+            } else {
+              this.$store.commit("addStationData", {
+                station: station.value,
+                data: res.data.sitevisits
+              });
+            }
           });
       }
     }
   },
   apollo: {
     stations: {
-      query: GET_STATIONS
+      query: GET_STATIONS // Initial data fetch of all stations...
     }
-  },
-  components: { vSelect }
+  }
 };
 </script>
 
