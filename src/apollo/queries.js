@@ -26,10 +26,6 @@ export const GET_STATION_DATA = gql`
   query getStationData($station: Int!) {
     sitevisits(station: $station) {
       id
-      station {
-        river_fork
-        station_id
-      }
       date
       notes
       results {

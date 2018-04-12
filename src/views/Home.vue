@@ -1,15 +1,17 @@
 <template>
   <div class="home">
-    <ul>
-      <li v-for="station in stations"
-          @click="load(station.StationID)"
-          :key="station.StationName">{{station.StationName}}</li>
-    </ul>
+    <v-select :options="selectionOptions"
+              placeholder="select a monitoring station"
+              resetOnOptionsChange
+              @input="fetchStationData" />
+
   </div>
 </template>
 
 <script>
 import { GET_STATIONS, GET_STATION_DATA } from "../apollo/queries";
+import vSelect from "vue-select";
+import { mapGetters } from "vuex";
 
 export default {
   name: "home",
@@ -17,35 +19,43 @@ export default {
   data() {
     return {
       stations: [],
-      loading: 0,
-      test: null,
-      riverData: [] // needs to be set in data() to get apollo data
+      loading: 0
     };
   },
+  computed: {
+    ...mapGetters(["loadedStations"]),
+    selectionOptions: function() {
+      return this.stations.map(s => {
+        return { label: s.StationName, value: s.StationID };
+      });
+    }
+  },
   methods: {
-    load: function(id) {
-      console.log(id);
-      this.$apollo
-        .query({
-          query: GET_STATION_DATA,
-          variables: {
-            station: id
-          }
-        })
-        .then(res => {
-          this.riverData.push(res.data.sitevisits);
-        });
+    fetchStationData: function(station) {
+      const id = station.value;
+      if (!this.loadedStations[id]) {
+        this.$apollo
+          .query({
+            query: GET_STATION_DATA,
+            variables: {
+              station: id
+            }
+          })
+          .then(res => {
+            this.$store.commit("addStationData", {
+              id,
+              data: res.data.sitevisits
+            });
+          });
+      }
     }
   },
   apollo: {
     stations: {
       query: GET_STATIONS
     }
-    // river: {
-    //   query: GET_STATION_DATA,
-    //   variables: { station: 19 }
-    // }
-  }
+  },
+  components: { vSelect }
 };
 </script>
 
