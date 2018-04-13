@@ -1,27 +1,42 @@
 <template>
-  <div class="home">
-    <div class="plot-style">
-      <h4 @click="switchPlot('BoxPlot')"
-          :class="{active: currentPlot === 'BoxPlot'}">stations</h4>
-      <h4 @click="switchPlot(
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col">
+        <div class="plot-style">
+          <h4 @click="switchPlot('BoxPlot')"
+              :class="{active: currentPlot === 'BoxPlot'}">stations</h4>
+          <h4 @click="switchPlot(
           'BoxPlot2')"
-          :class="{active:
+              :class="{active:
           currentPlot === 'BoxPlot2'}">months</h4>
+        </div>
+        <StationSelector v-if="currentPlot==='BoxPlot2'"></StationSelector>
+        <div class="row">
+          <div class="col-sm-2">
+            <ParamSelector />
+          </div>
+          <div class="col-sm-10">
+            <v-select :options="selectionOptions"
+                      placeholder="select a monitoring station"
+                      resetOnOptionsChange
+                      @input="fetchStationData" />
+            <component :is="currentPlot"></component>
+            <Error :errors="errors"></Error>
+          </div>
+        </div>
+      </div>
     </div>
-    <v-select :options="selectionOptions"
-              placeholder="select a monitoring station"
-              resetOnOptionsChange
-              @input="fetchStationData" />
-    <component :is="currentPlot"></component>
-    <Error :errors="errors"></Error>
   </div>
 </template>
 
 <script>
 import BoxPlot from "../components/BoxPlot.vue";
 import BoxPlot2 from "../components/BoxPlot2.vue";
+import ParamSelector from "../components/ParamSelector";
+import StationSelector from "../components/StationSelector";
 import Error from "../components/Error.vue";
 import vSelect from "vue-select";
+import "../assets/bootstrap.css";
 
 import { GET_STATIONS, GET_STATION_DATA } from "../apollo/queries";
 import { mapState } from "vuex";
@@ -29,12 +44,19 @@ import find from "lodash/find";
 
 export default {
   name: "home",
-  components: { vSelect, BoxPlot, BoxPlot2, Error },
+  components: {
+    vSelect,
+    BoxPlot,
+    BoxPlot2,
+    ParamSelector,
+    StationSelector,
+    Error
+  },
   data() {
     return {
       stations: [],
       loading: 0,
-      currentPlot: "BoxPlot2"
+      currentPlot: "BoxPlot"
     };
   },
 
@@ -52,6 +74,7 @@ export default {
   methods: {
     switchPlot: function(style) {
       this.currentPlot = style;
+      // eslint-disable-next-line
       console.log("this.currentPlot", this.currentPlot);
     },
     fetchStationData: function(station) {
@@ -80,6 +103,7 @@ export default {
                 station: station.value,
                 data: res.data.sitevisits
               });
+              this.$store.commit("setStation", station.value);
             }
           });
       }

@@ -9,6 +9,7 @@
 import graphConfig from "../assets/graphConfig.js";
 import { boxPlotDataPerMonth, get5 } from "../utils";
 import { mapState } from "vuex";
+import { findIndex } from "lodash";
 
 export default {
   name: "BoxPlot2",
@@ -16,12 +17,12 @@ export default {
     return {};
   },
   computed: {
-    ...mapState(["loadedStations"]),
+    ...mapState(["loadedStations", "param", "selectedStation"]),
     graphOptions: function() {
       return {
         ...graphConfig,
         title: {
-          text: "per month"
+          text: this.param.name + " for " + this.selectedStation.StationName
         },
         series: [
           {
@@ -53,9 +54,11 @@ export default {
       };
     },
     plotData: function() {
-      return boxPlotDataPerMonth(
-        this.loadedStations[this.loadedStations.length - 1]
+      let index = findIndex(
+        this.loadedStations,
+        s => s.station.StationID === this.selectedStation.StationID
       );
+      return boxPlotDataPerMonth(this.loadedStations[index], this.param);
     }
   }
 };

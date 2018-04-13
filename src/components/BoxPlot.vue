@@ -16,12 +16,12 @@ export default {
     return {};
   },
   computed: {
-    ...mapState(["loadedStations"]),
+    ...mapState(["loadedStations", "param"]),
     graphOptions: function() {
       return {
         ...graphConfig,
         title: {
-          text: "per station"
+          text: this.param.name
         },
         series: [
           {
@@ -38,7 +38,7 @@ export default {
       };
     },
     plotData: function() {
-      return boxPlotDataPerStation(this.loadedStations);
+      return boxPlotDataPerStation(this.loadedStations, this.param);
     }
   }
 };

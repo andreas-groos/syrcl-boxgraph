@@ -6,7 +6,7 @@ import { getMonth } from "date-fns";
  *
  * @export get5
  * @param {Number} arr
- * @returns {array} [min,q25,q5,q75,max]
+ * @returns {Array} [min,q25,q5,q75,max]
  */
 export function get5(arr) {
   return [
@@ -17,7 +17,7 @@ export function get5(arr) {
     Math.max(...arr)
   ];
 }
-export function boxPlotDataPerStation(stations) {
+export function boxPlotDataPerStation(stations, param) {
   let result = [];
   stations.map(s => {
     let temp = [];
@@ -25,7 +25,7 @@ export function boxPlotDataPerStation(stations) {
     singleStationData.map(m => {
       try {
         if (m.results.H2O_Temp.mean) {
-          temp.push(m.results.H2O_Temp.mean);
+          temp.push(m.results[param.value].mean);
         }
         /* eslint-disable-next-line */
       } catch (e) {}
@@ -43,43 +43,19 @@ export function boxPlotDataPerStation(stations) {
   return result;
 }
 
-export function boxPlotDataPerMonth(station) {
+export function boxPlotDataPerMonth(station, param) {
   if (station) {
-    console.log("station", station);
     let temp = new Array(12).fill([]);
     let { data } = station;
-    console.log("temp", temp);
-    console.log("data", data);
-    data.map((m, index) => {
+    data.map(m => {
       if (m.date) {
-        // console.log(
-        //   "m.date, getMonth(m.results.date)",
-        //   m.date,
-        //   getMonth(m.date)
-        // );
-        console.log("index", index);
         const month = getMonth(m.date);
         try {
-          console.log(
-            "month , m.results.H2O_Temp.mean",
-            month,
-            m.results.H2O_Temp.mean
-          );
-          console.log("temp[month]", temp[month]);
-          temp[month] = temp[month].concat(m.results.H2O_Temp.mean);
-          console.log("temp[month]", temp[month]);
-          console.log("temp", temp);
-          console.log("-----------------------------");
+          temp[month] = temp[month].concat(m.results[param.value].mean);
+          // eslint-disable-next-line
         } catch (err) {}
       }
     });
-    console.log("temp", temp);
-    // let min = Math.min(...temp);
-    // let max = Math.max(...temp);
-    // let q25 = quantile(temp, 0.25);
-    // let q5 = quantile(temp, 0.5);
-    // let q75 = quantile(temp, 0.75);
-    // result.push({ station: s.station, data: [min, q25, q5, q75, max] });
     return temp;
   } else return null;
 }

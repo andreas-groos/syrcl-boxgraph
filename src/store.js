@@ -1,6 +1,6 @@
 import Vue from "vue";
 import Vuex from "vuex";
-import { find, findIndex } from "lodash";
+import { findIndex } from "lodash";
 import shortid from "shortid";
 
 Vue.use(Vuex);
@@ -8,12 +8,20 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
     loadedStations: [],
-    errors: []
+    param: { name: "Temp", value: "H2O_Temp" },
+    errors: [],
+    selectedStation: null
   },
   mutations: {
     addStationData(state, payload) {
       const { station, data } = payload;
       state.loadedStations.push({ station, data });
+    },
+    setParam(state, payload) {
+      state.param = payload;
+    },
+    setStation(state, payload) {
+      state.selectedStation = payload;
     },
     addError(state, payload) {
       const { type, msg } = payload;
