@@ -9,7 +9,9 @@ import apolloClient from "./apollo";
 import Highcharts from "highcharts";
 import highchartsMore from "highcharts-more";
 import VueHighcharts from "vue-highcharts"; // NOTE: unofficial client, would be good to switch
-require('highcharts/modules/exporting')(Highcharts);
+require("highcharts/modules/exporting")(Highcharts);
+// TODO: customize export from https://api.highcharts.com/highcharts/exporting.csv
+require("highcharts/modules/export-data")(Highcharts);
 
 highchartsMore(Highcharts);
 Vue.config.productionTip = false;
