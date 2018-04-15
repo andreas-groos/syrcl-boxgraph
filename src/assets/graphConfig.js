@@ -1,6 +1,7 @@
 const graphConfig = {
   chart: {
-    type: "boxplot"
+    type: "boxplot",
+    zoomType: 'xy"'
   },
   title: {
     text: "Boxplots"

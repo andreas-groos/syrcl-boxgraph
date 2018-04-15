@@ -9,6 +9,11 @@ export default new Vuex.Store({
   state: {
     loadedStations: [],
     param: { name: "Temp", value: "H2O_Temp" },
+    plot: {
+      name: "Box Plot By Station",
+      value: "BoxPlotByStation",
+      singleStation: false
+    },
     errors: [],
     selectedStation: null
   },
@@ -19,6 +24,10 @@ export default new Vuex.Store({
     },
     setParam(state, payload) {
       state.param = payload;
+    },
+    setPlot(state, payload) {
+      console.log("payload", payload);
+      state.plot = payload;
     },
     setStation(state, payload) {
       state.selectedStation = payload;

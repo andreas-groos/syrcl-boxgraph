@@ -2,26 +2,21 @@
   <div class="container-fluid">
     <div class="row">
       <div class="col">
-        <div class="plot-style">
-          <h4 @click="switchPlot('BoxPlot')"
-              :class="{active: currentPlot === 'BoxPlot'}">stations</h4>
-          <h4 @click="switchPlot(
-          'BoxPlot2')"
-              :class="{active:
-          currentPlot === 'BoxPlot2'}">months</h4>
-        </div>
-        <StationSelector v-if="currentPlot==='BoxPlot2'"></StationSelector>
+        <StationSelector v-if="plot.singleStation"></StationSelector>
         <div class="row">
           <div class="col-sm-2">
             <ParamSelector />
           </div>
-          <div class="col-sm-10">
+          <div class="col-sm-8">
             <v-select :options="selectionOptions"
                       placeholder="select a monitoring station"
                       resetOnOptionsChange
                       @input="fetchStationData" />
-            <component :is="currentPlot"></component>
+            <component :is="plot.value"></component>
             <Error :errors="errors"></Error>
+          </div>
+          <div class="col-sm-2">
+            <PlotSelector />
           </div>
         </div>
       </div>
@@ -30,9 +25,11 @@
 </template>
 
 <script>
-import BoxPlot from "../components/BoxPlot.vue";
-import BoxPlot2 from "../components/BoxPlot2.vue";
+import BoxPlotByStation from "../components/BoxPlotByStation.vue";
+import BoxPlotByMonth from "../components/BoxPlotByMonth.vue";
+import LinePlotByStation from "../components/LinePlotByStation";
 import ParamSelector from "../components/ParamSelector";
+import PlotSelector from "../components/PlotSelector";
 import StationSelector from "../components/StationSelector";
 import Error from "../components/Error.vue";
 import vSelect from "vue-select";
@@ -46,9 +43,11 @@ export default {
   name: "home",
   components: {
     vSelect,
-    BoxPlot,
-    BoxPlot2,
+    BoxPlotByStation,
+    BoxPlotByMonth,
+    LinePlotByStation,
     ParamSelector,
+    PlotSelector,
     StationSelector,
     Error
   },
@@ -56,12 +55,12 @@ export default {
     return {
       stations: [],
       loading: 0,
-      currentPlot: "BoxPlot"
+      currentPlot: "BoxPlotByStation"
     };
   },
 
   computed: {
-    ...mapState(["loadedStations", "errors"]),
+    ...mapState(["loadedStations", "errors", "plot"]),
     selectionOptions: function() {
       return this.stations.map(s => {
         return {
@@ -118,16 +117,4 @@ export default {
 </script>
 
 <style lang="scss"  scoped>
-.plot-style {
-  display: flex;
-  justify-content: center;
-  & > h4 {
-    padding: 10px 30px;
-    margin: 5px 10px;
-  }
-}
-.active {
-  color: #42b983;
-  text-decoration: underline;
-}
 </style>

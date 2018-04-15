@@ -26,7 +26,7 @@ export default {
         },
         series: [
           {
-            name: "Measurments",
+            name: this.param.name,
             data: this.plotData.map(p => {
               return get5(p);
             }),

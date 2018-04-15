@@ -59,3 +59,25 @@ export function boxPlotDataPerMonth(station, param) {
     return temp;
   } else return null;
 }
+
+export function linePlotDataPerStation(stations, param) {
+  let singleStationTemp = [];
+  if (stations) {
+    // console.log("stations", stations);
+    // console.log("param", param);
+    stations.map(s => {
+      // console.log("s", s);
+      s.data.map(d => {
+        console.log("d", d);
+        try {
+          singleStationTemp.push(d.results[param.value].mean);
+        } catch (e) {
+          console.log(e);
+        }
+      });
+      console.log("singleStationTemp", singleStationTemp);
+      console.log("----------------------");
+    });
+    return singleStationTemp;
+  } else return null;
+}

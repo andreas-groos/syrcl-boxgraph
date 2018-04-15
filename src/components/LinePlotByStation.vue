@@ -1,3 +1,4 @@
+
 <template>
   <div>
     <highcharts v-if="plotData && plotData.length > 0"
@@ -7,11 +8,11 @@
 
 <script>
 import graphConfig from "../assets/graphConfig.js";
-import { boxPlotDataPerStation } from "../utils";
+import { linePlotDataPerStation } from "../utils";
 import { mapState } from "vuex";
 
 export default {
-  name: "BoxPlot",
+  name: "LinePlotByStation",
   data() {
     return {};
   },
@@ -20,29 +21,33 @@ export default {
     graphOptions: function() {
       return {
         ...graphConfig,
+        chart: {
+          type: "line"
+        },
         title: {
           text: this.param.name
         },
         series: [
           {
-            name: "Measurments",
-            data: this.plotData.map(p => p.data),
+            name: this.param.name,
+            data: this.plotData,
             tooltip: {
               headerFormat: "<em>Station: {point.key}</em><br/>"
             }
           }
         ],
         xAxis: {
-          categories: this.plotData.map(p => p.station.StationName)
+          // categories: this.plotData.map(p => p.station.StationName)
+          categories: "hilell"
         }
       };
     },
     plotData: function() {
-      return boxPlotDataPerStation(this.loadedStations, this.param);
+      return linePlotDataPerStation(this.loadedStations, this.param);
     }
   }
 };
 </script>
 
-<style>
+<style scoped>
 </style>
