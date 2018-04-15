@@ -1,5 +1,5 @@
 import { quantile } from "simple-statistics";
-import { getMonth } from "date-fns";
+import { getMonth, format } from "date-fns";
 
 /**
  * Turns array into [min,q25,q5,q75,max] for boxgraphs
@@ -61,23 +61,32 @@ export function boxPlotDataPerMonth(station, param) {
 }
 
 export function linePlotDataPerStation(stations, param) {
-  let singleStationTemp = [];
+  let allStationsTemp = [];
   if (stations) {
     // console.log("stations", stations);
     // console.log("param", param);
     stations.map(s => {
-      // console.log("s", s);
+      let singleStationTemp = [];
+      console.log("s", s);
       s.data.map(d => {
         console.log("d", d);
         try {
-          singleStationTemp.push(d.results[param.value].mean);
+          let dateArr = d.date.split("-");
+          singleStationTemp.push([
+            Date.UTC(dateArr[0], dateArr[1], dateArr[2]),
+            d.results[param.value].mean
+          ]);
         } catch (e) {
           console.log(e);
         }
       });
       console.log("singleStationTemp", singleStationTemp);
+      allStationsTemp.push({
+        name: s.station.StationName,
+        data: singleStationTemp
+      });
       console.log("----------------------");
     });
-    return singleStationTemp;
+    return allStationsTemp;
   } else return null;
 }
