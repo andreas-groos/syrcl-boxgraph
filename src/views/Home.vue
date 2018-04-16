@@ -97,7 +97,7 @@ export default {
             ) {
               this.$store.commit("addError", {
                 type: "selection",
-                msg: "station already selected"
+                msg: `${station.value.StationName} already selected`
               });
             } else {
               this.$store.commit("addStationData", {

@@ -1,12 +1,14 @@
 <template>
   <div v-if="errors && errors.length">
-    <ul>
-      <li v-for="(error,index) in errors"
-          :key="index">
-        <p @click="clickError(error.id)">{{error.msg}}</p>
-      </li>
-    </ul>
-
+    <div v-for="(error,index) in errors"
+         :key="index">
+      <div class="alert alert-danger"
+           role="alert"
+           @click="clickError(error.id)">
+        {{error.msg}}
+        <small class="text-muted">click to dismiss</small>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -16,7 +18,6 @@ export default {
   props: ["errors"],
   methods: {
     clickError: function(id) {
-      console.log("id", id);
       this.$store.commit("removeError", { id });
     }
   }
