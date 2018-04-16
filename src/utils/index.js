@@ -69,7 +69,7 @@ export function linePlotDataPerStation(stations, param) {
       let singleStationTemp = [];
       console.log("s", s);
       s.data.map(d => {
-        console.log("d", d);
+        // console.log("d", d);
         try {
           let dateArr = d.date.split("-");
           singleStationTemp.push([
@@ -80,7 +80,7 @@ export function linePlotDataPerStation(stations, param) {
           console.log(e);
         }
       });
-      console.log("singleStationTemp", singleStationTemp);
+      // console.log("singleStationTemp", singleStationTemp);
       allStationsTemp.push({
         name: s.station.StationName,
         data: singleStationTemp

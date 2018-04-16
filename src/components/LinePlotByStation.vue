@@ -48,10 +48,10 @@ export default {
         series: this.plotData,
         xAxis: {
           type: "datetime",
-          dateTimeLabelFormats: {
-            month: "e%. b%",
-            year: "%b"
-          },
+          // dateTimeLabelFormats: {
+          //   month: "e%. b%",
+          //   year: "%b"
+          // },
           title: {
             text: "Date"
           }
@@ -64,9 +64,14 @@ export default {
         plotOptions: {
           spline: {
             marker: {
-              enabled: false
+              enabled: true,
+              radius: 3
             }
-          }
+          },
+          series: { animation: false }
+        },
+        legend: {
+          enabled: true
         }
       };
     },

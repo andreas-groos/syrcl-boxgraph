@@ -33,7 +33,7 @@ import PlotSelector from "../components/PlotSelector";
 import StationSelector from "../components/StationSelector";
 import Error from "../components/Error.vue";
 import vSelect from "vue-select";
-import "../assets/bootstrap.css";
+// import "../assets/bootstrap.css";
 
 import { GET_STATIONS, GET_STATION_DATA } from "../apollo/queries";
 import { mapState } from "vuex";
@@ -88,7 +88,7 @@ export default {
             }
           })
           .then(res => {
-            this.selected = null;
+            this.selected = null; //NOTE: resets selection, throws error though I do it like in one of the offical codepen example!
             if (
               find(
                 this.loadedStations,
