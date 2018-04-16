@@ -1,5 +1,6 @@
 import { quantile } from "simple-statistics";
-import { getMonth, format } from "date-fns";
+import { getMonth, getYear, format } from "date-fns";
+import { sortBy } from "lodash";
 
 /**
  * Turns array into [min,q25,q5,q75,max] for boxgraphs
@@ -63,30 +64,58 @@ export function boxPlotDataPerMonth(station, param) {
 export function linePlotDataPerStation(stations, param) {
   let allStationsTemp = [];
   if (stations) {
-    // console.log("stations", stations);
-    // console.log("param", param);
     stations.map(s => {
       let singleStationTemp = [];
-      console.log("s", s);
       s.data.map(d => {
-        // console.log("d", d);
         try {
-          let dateArr = d.date.split("-");
-          singleStationTemp.push([
-            Date.UTC(dateArr[0], dateArr[1], dateArr[2]),
-            d.results[param.value].mean
-          ]);
+          singleStationTemp.push([d.date, d.results[param.value].mean]);
         } catch (e) {
           console.log(e);
         }
       });
-      // console.log("singleStationTemp", singleStationTemp);
+      singleStationTemp = nullBuffer(singleStationTemp);
+      let utcTemp = [];
+      singleStationTemp.map(s => {
+        let dateArr = s[0].split("-");
+        utcTemp.push([Date.UTC(dateArr[0], dateArr[1], dateArr[2]), s[1]]);
+      });
       allStationsTemp.push({
         name: s.station.StationName,
-        data: singleStationTemp
+        data: utcTemp
       });
-      console.log("----------------------");
     });
     return allStationsTemp;
   } else return null;
+}
+
+/**
+ * fills in months that don't have any data with null so that charts show gaps
+ *
+ * @export nullBuffer
+ * @param {Array} data
+ * @returns {Array} array of StationVisits
+ */
+export function nullBuffer(data) {
+  let startYear = getYear(data[0][0]);
+  console.log("startYear", startYear);
+  let endYear = getYear(data[data.length - 1][0]);
+  for (let year = startYear; year <= endYear; year++) {
+    for (let month = 0; month <= 11; month++) {
+      let valueExists = data.some((e, index) => {
+        let m = getMonth(e[0]);
+        let y = getYear(e[0]);
+        if (m === month && y === year) {
+          return true;
+        }
+      });
+      if (!valueExists) {
+        let monthStr = (month + 1).toString();
+        if (month < 9) {
+          monthStr = "0" + monthStr;
+        }
+        data.push([year.toString() + "-" + monthStr + "-01", null]);
+      }
+    }
+  }
+  return sortBy(data, o => o[0]);
 }

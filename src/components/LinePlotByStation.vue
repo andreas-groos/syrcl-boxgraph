@@ -76,7 +76,10 @@ export default {
       };
     },
     plotData: function() {
-      return linePlotDataPerStation(this.loadedStations, this.param);
+      console.log("this.loadedStations", this.loadedStations);
+      let data = linePlotDataPerStation(this.loadedStations, this.param);
+      console.log("data", data);
+      return data;
     }
   }
 };
