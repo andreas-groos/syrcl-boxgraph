@@ -32,6 +32,14 @@ export default new Vuex.Store({
     setStation(state, payload) {
       state.selectedStation = payload;
     },
+    removeStation(state, payload) {
+      let index = findIndex(
+        state.loadedStations,
+        e => payload.StationID === e.station.StationID
+      );
+      state.loadedStations.splice(index, 1);
+      // TODO: reselect another component automatically
+    },
     addError(state, payload) {
       const { type, msg } = payload;
       state.errors.push({ type, msg, id: shortid.generate() });

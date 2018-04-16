@@ -5,7 +5,8 @@
          :key="plot.name">
       <button type="button"
               @click="handleClick(plot)"
-              class="btn btn-block btn-outline-primary">
+              class="btn btn-block btn-outline-primary"
+              :class="{active: plot.value === plotStyle.value}">
         {{plot.name}}
       </button>
     </div>
@@ -13,6 +14,7 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
 export default {
   name: "GraphSelector",
   data() {
@@ -45,6 +47,11 @@ export default {
     handleClick: function(value) {
       this.$store.commit("setPlot", value);
     }
+  },
+  computed: {
+    ...mapState({
+      plotStyle: "plot"
+    })
   }
 };
 </script>

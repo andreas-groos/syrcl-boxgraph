@@ -10,8 +10,13 @@
 
             <button type="button"
                     @click="handleClick(station.station)"
-                    class="btn btn-block btn-outline-primary">
+                    class="btn btn-block btn-outline-primary"
+                    :class="{active : station.station.StationID === selectedStation.StationID}">
               {{station.station.StationName}}
+              <font-awesome-icon :icon="icon"
+                                 class="float-right"
+                                 size="lg"
+                                 @click="closeStation(station.station)" />
             </button>
           </div>
         </div>
@@ -22,17 +27,30 @@
 
 <script>
 import { mapState } from "vuex";
+import FontAwesomeIcon from "@fortawesome/vue-fontawesome";
+import faWindowClose from "@fortawesome/fontawesome-free-solid/faWindowClose";
+
 export default {
   name: "StationSelector",
+  components: { FontAwesomeIcon },
   data() {
     return {};
   },
   computed: {
-    ...mapState({ stations: "loadedStations" })
+    ...mapState({
+      stations: "loadedStations",
+      selectedStation: "selectedStation"
+    }),
+    icon() {
+      return faWindowClose;
+    }
   },
   methods: {
     handleClick: function(value) {
       this.$store.commit("setStation", value);
+    },
+    closeStation: function(value) {
+      this.$store.commit("removeStation", value);
     }
   }
 };

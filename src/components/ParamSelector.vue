@@ -4,7 +4,8 @@
          :key="param.name">
       <button type="button"
               @click="handleClick(param)"
-              class="btn btn-block btn-outline-primary">
+              class="btn btn-block btn-outline-primary"
+              :class="{active: param.value === selectedParam.value}">
         {{param.name}}
       </button>
     </div>
@@ -12,6 +13,7 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
 export default {
   name: "ParamSelector",
   data() {
@@ -29,6 +31,11 @@ export default {
     handleClick: function(value) {
       this.$store.commit("setParam", value);
     }
+  },
+  computed: {
+    ...mapState({
+      selectedParam: "param"
+    })
   }
 };
 </script>
