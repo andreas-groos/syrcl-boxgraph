@@ -10,8 +10,8 @@
           <div class="col-sm-8">
             <v-select :options="selectionOptions"
                       placeholder="select a monitoring station"
-                      resetOnOptionsChange
-                      @input="fetchStationData" />
+                      @input="fetchStationData"
+                      v-model="selected" />
             <component :is="plot.value"></component>
             <Error :errors="errors"></Error>
           </div>
@@ -55,7 +55,8 @@ export default {
     return {
       stations: [],
       loading: 0,
-      currentPlot: "BoxPlotByStation"
+      currentPlot: "BoxPlotByStation",
+      selected: null
     };
   },
 
@@ -87,6 +88,7 @@ export default {
             }
           })
           .then(res => {
+            this.selected = null;
             if (
               find(
                 this.loadedStations,
