@@ -12,6 +12,7 @@ import VueHighcharts from "vue-highcharts"; // NOTE: unofficial client, would be
 require("highcharts/modules/exporting")(Highcharts);
 // TODO: customize export from https://api.highcharts.com/highcharts/exporting.csv
 require("highcharts/modules/export-data")(Highcharts);
+require("highcharts/modules/heatmap")(Highcharts);
 
 highchartsMore(Highcharts);
 Vue.config.productionTip = false;
