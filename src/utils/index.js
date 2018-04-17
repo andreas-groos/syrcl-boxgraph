@@ -64,16 +64,21 @@ export function boxPlotDataPerMonth(station, param) {
 export function linePlotDataPerStation(stations, param) {
   let allStationsTemp = [];
   if (stations) {
+    let startYear, endYear;
     stations.map(s => {
       let singleStationTemp = [];
       s.data.map(d => {
+        // console.log("d", d);
         try {
           singleStationTemp.push([d.date, d.results[param.value].mean]);
         } catch (e) {
           console.log(e);
         }
       });
-      singleStationTemp = nullBuffer(singleStationTemp);
+      let nullBuffered = nullBuffer(singleStationTemp);
+      startYear = nullBuffered.startYear;
+      endYear = nullBuffered.endYear;
+      singleStationTemp = nullBuffered.data;
       let utcTemp = [];
       singleStationTemp.map(s => {
         let dateArr = s[0].split("-");
@@ -84,7 +89,7 @@ export function linePlotDataPerStation(stations, param) {
         data: utcTemp
       });
     });
-    return allStationsTemp;
+    return { data: allStationsTemp, startYear, endYear };
   } else return null;
 }
 
@@ -97,7 +102,7 @@ export function linePlotDataPerStation(stations, param) {
  */
 export function nullBuffer(data) {
   let startYear = getYear(data[0][0]);
-  console.log("startYear", startYear);
+  // console.log("startYear", startYear);
   let endYear = getYear(data[data.length - 1][0]);
   for (let year = startYear; year <= endYear; year++) {
     for (let month = 0; month <= 11; month++) {
@@ -117,5 +122,5 @@ export function nullBuffer(data) {
       }
     }
   }
-  return sortBy(data, o => o[0]);
+  return { data: sortBy(data, o => o[0]), startYear, endYear };
 }

@@ -10,12 +10,14 @@
 import graphConfig from "../assets/graphConfig.js";
 import { linePlotDataPerStation } from "../utils";
 import { mapState } from "vuex";
-import { format } from "date-fns";
 
 export default {
   name: "LinePlotByStation",
   data() {
-    return {};
+    return {
+      startYear: null,
+      endYear: null
+    };
   },
   computed: {
     ...mapState(["loadedStations", "param"]),
@@ -24,7 +26,6 @@ export default {
         ...graphConfig,
         chart: {
           type: "spline",
-
           zoomType: 'xy"'
         },
         title: {
@@ -60,6 +61,7 @@ export default {
           title: {
             text: this.param.name
           }
+          // type: "logarithmic"
         },
         plotOptions: {
           spline: {
@@ -77,8 +79,13 @@ export default {
     },
     plotData: function() {
       console.log("this.loadedStations", this.loadedStations);
-      let data = linePlotDataPerStation(this.loadedStations, this.param);
+      let { data, startYear, endYear } = linePlotDataPerStation(
+        this.loadedStations,
+        this.param
+      );
       console.log("data", data);
+      console.log("startYear", startYear);
+      console.log("endYear", endYear);
       return data;
     }
   }

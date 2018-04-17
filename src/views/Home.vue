@@ -28,6 +28,7 @@
 import BoxPlotByStation from "../components/BoxPlotByStation.vue";
 import BoxPlotByMonth from "../components/BoxPlotByMonth.vue";
 import LinePlotByStation from "../components/LinePlotByStation";
+import LinePlotByYear from "../components/LinePlotByYear";
 import ParamSelector from "../components/ParamSelector";
 import PlotSelector from "../components/PlotSelector";
 import StationSelector from "../components/StationSelector";
@@ -46,6 +47,7 @@ export default {
     BoxPlotByStation,
     BoxPlotByMonth,
     LinePlotByStation,
+    LinePlotByYear,
     ParamSelector,
     PlotSelector,
     StationSelector,

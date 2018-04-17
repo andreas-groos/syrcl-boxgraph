@@ -34,12 +34,12 @@ export default {
           name: "Line Plot by Station",
           value: "LinePlotByStation",
           singleStation: false
+        },
+        {
+          name: "Line Plot Single Year ",
+          value: "LinePlotByYear",
+          singleStation: true
         }
-        // {
-        //   name: "Line Plot by Month",
-        //   value: "LinePlotbyMonth",
-        //   singleStation: true
-        // }
       ]
     };
   },
